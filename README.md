@@ -119,6 +119,23 @@ The UI will be available at:
 
 Open that URL in your browser. Enter an instruction and click **Run** to see the agent trace.
 
+## Assumptions
+
+Include the following specified keywords in your input. Otherwise it won't be recognized.
+
+### TextProcessorTool
+
+- uppercase/upper case/lowercase/lower case/word count/count words
+
+### CalculatorTool
+
+- calculate/compute/add/subtract/multiply/divide
+- Or any arithmetic operators
+
+### WeatherMockTool
+
+- weather/temperature/forecast
+
 ## Example Instructions
 
 Try these prompts in the UI:
@@ -230,3 +247,14 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
 For this demo, running both dev servers locally is sufficient.
+
+## Time Spent
+
+2.5 - 3 hours
+
+## Future Improvements
+
+- Instead of the rigid keyword/pattern matching, utilize an LLM to interpret the user instruction.
+- Implement multi-step reasoning and tool collaboration with LangChain and LangGraph.
+- Retry, error-handling, fallback components in the system to make it more robust.
+- Cache management for larger traffic.
