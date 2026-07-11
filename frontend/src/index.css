@@ -1,0 +1,206 @@
+:root {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  color: #1a1a2e;
+  background: #f0f2f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.app-header {
+  margin-bottom: 2rem;
+}
+
+.app-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  color: #16213e;
+}
+
+.app-header p {
+  margin: 0;
+  color: #4a5568;
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.panel {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.panel h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  color: #16213e;
+}
+
+.instruction-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.instruction-form label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.instruction-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.instruction-form textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.instruction-form button {
+  align-self: flex-start;
+  padding: 0.6rem 1.5rem;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.instruction-form button:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.instruction-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.trace-list {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.trace-list li {
+  margin-bottom: 0.5rem;
+}
+
+.result-box {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #f7fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.result-box h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+}
+
+.result-box pre {
+  margin: 0;
+  font-family: "Cascadia Code", "Consolas", monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.placeholder {
+  color: #718096;
+  margin: 0;
+}
+
+.error-message {
+  color: #e53e3e;
+  margin: 0;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.history-header h2 {
+  margin: 0;
+}
+
+.history-header button {
+  padding: 0.4rem 1rem;
+  background: #edf2f7;
+  color: #2d3748;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.history-header button:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.history-list li + li {
+  margin-top: 0.5rem;
+}
+
+.history-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.history-item:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+.history-instruction {
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.history-meta {
+  font-size: 0.8rem;
+  color: #718096;
+}

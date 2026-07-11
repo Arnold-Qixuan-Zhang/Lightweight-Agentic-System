@@ -1,0 +1,283 @@
+[
+  {
+    "id": "0de8beff-d624-4d37-8503-b128bb6aafd9",
+    "instruction": "convert hello to uppercase",
+    "tool": "TextProcessorTool",
+    "params": {
+      "operation": "uppercase",
+      "text": "hello"
+    },
+    "result": "HELLO",
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"convert hello to uppercase\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: TextProcessorTool (operation: uppercase, text: hello)"
+      },
+      {
+        "step": 3,
+        "message": "Executed TextProcessorTool → HELLO"
+      }
+    ],
+    "created_at": "2026-07-10T20:17:44.310377+00:00"
+  },
+  {
+    "id": "1c9f4907-4ec1-4590-b01d-522ec8bd5768",
+    "instruction": "calculate 15 * 4",
+    "tool": "CalculatorTool",
+    "params": {
+      "expression": "15 * 4"
+    },
+    "result": 60,
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"calculate 15 * 4\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: CalculatorTool (expression: 15 * 4)"
+      },
+      {
+        "step": 3,
+        "message": "Executed CalculatorTool → 60"
+      }
+    ],
+    "created_at": "2026-07-10T20:17:44.311415+00:00"
+  },
+  {
+    "id": "54c0f8c5-de66-47cd-8156-74a0b8b30250",
+    "instruction": "weather in Toronto",
+    "tool": "WeatherMockTool",
+    "params": {
+      "city": "Toronto"
+    },
+    "result": {
+      "city": "Toronto",
+      "temperature": "22°C",
+      "condition": "Partly cloudy"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"weather in Toronto\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: WeatherMockTool (city: Toronto)"
+      },
+      {
+        "step": 3,
+        "message": "Executed WeatherMockTool → {'city': 'Toronto', 'temperature': '22°C', 'condition': 'Partly cloudy'}"
+      }
+    ],
+    "created_at": "2026-07-10T20:17:44.324533+00:00"
+  },
+  {
+    "id": "a38f7649-fe6a-447c-a4b9-7de78865d916",
+    "instruction": "Convert abcd to uppercase",
+    "tool": "TextProcessorTool",
+    "params": {
+      "operation": "uppercase",
+      "text": "abcd"
+    },
+    "result": "ABCD",
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"Convert abcd to uppercase\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: TextProcessorTool (operation: uppercase, text: abcd)"
+      },
+      {
+        "step": 3,
+        "message": "Executed TextProcessorTool → ABCD"
+      }
+    ],
+    "created_at": "2026-07-10T20:37:35.257791+00:00"
+  },
+  {
+    "id": "223ab36a-74fc-497a-942e-0e490a01d4e4",
+    "instruction": "Calculate 1+1",
+    "tool": "CalculatorTool",
+    "params": {
+      "expression": "1 + 1"
+    },
+    "result": 2,
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"Calculate 1+1\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: CalculatorTool (expression: 1 + 1)"
+      },
+      {
+        "step": 3,
+        "message": "Executed CalculatorTool → 2"
+      }
+    ],
+    "created_at": "2026-07-10T20:38:57.214647+00:00"
+  },
+  {
+    "id": "586dd03d-1e30-4b8e-b050-677de2d865fc",
+    "instruction": "count words i am happy",
+    "tool": "TextProcessorTool",
+    "params": {
+      "operation": "wordcount",
+      "text": "i am happy"
+    },
+    "result": 3,
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"count words i am happy\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: TextProcessorTool (operation: wordcount, text: i am happy)"
+      },
+      {
+        "step": 3,
+        "message": "Executed TextProcessorTool → 3"
+      }
+    ],
+    "created_at": "2026-07-10T20:39:12.493205+00:00"
+  },
+  {
+    "id": "d5db0c6b-e2f3-4d36-9ce0-5b6c972005b8",
+    "instruction": "weather in Chicago",
+    "tool": "WeatherMockTool",
+    "params": {
+      "city": "Chicago"
+    },
+    "result": {
+      "city": "Chicago",
+      "temperature": "20°C",
+      "condition": "Mild"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"weather in Chicago\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: WeatherMockTool (city: Chicago)"
+      },
+      {
+        "step": 3,
+        "message": "Executed WeatherMockTool → {'city': 'Chicago', 'temperature': '20°C', 'condition': 'Mild'}"
+      }
+    ],
+    "created_at": "2026-07-10T20:39:30.426604+00:00"
+  },
+  {
+    "id": "c1c105bc-6785-4dc2-9f8d-c7aa3b01d450",
+    "instruction": "count words in the i am happy",
+    "tool": "TextProcessorTool",
+    "params": {
+      "operation": "wordcount",
+      "text": "the i am happy"
+    },
+    "result": 4,
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"count words in the i am happy\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: TextProcessorTool (operation: wordcount, text: the i am happy)"
+      },
+      {
+        "step": 3,
+        "message": "Executed TextProcessorTool → 4"
+      }
+    ],
+    "created_at": "2026-07-11T13:02:59.818228+00:00"
+  },
+  {
+    "id": "49e2b604-3118-4434-937f-f9ce84255034",
+    "instruction": "count words in the i am happy today",
+    "tool": "TextProcessorTool",
+    "params": {
+      "operation": "wordcount",
+      "text": "the i am happy today"
+    },
+    "result": 5,
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"count words in the i am happy today\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: TextProcessorTool (operation: wordcount, text: the i am happy today)"
+      },
+      {
+        "step": 3,
+        "message": "Executed TextProcessorTool → 5"
+      }
+    ],
+    "created_at": "2026-07-11T13:03:07.971184+00:00"
+  },
+  {
+    "id": "ff642ba4-65d3-4775-8814-e604cf7fa829",
+    "instruction": "calculate 1 - 100",
+    "tool": "CalculatorTool",
+    "params": {
+      "expression": "1 - 100"
+    },
+    "result": -99,
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"calculate 1 - 100\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: CalculatorTool (expression: 1 - 100)"
+      },
+      {
+        "step": 3,
+        "message": "Executed CalculatorTool → -99"
+      }
+    ],
+    "created_at": "2026-07-11T13:03:18.031802+00:00"
+  },
+  {
+    "id": "c5cc11cd-2564-4395-801e-923dd94f26ca",
+    "instruction": "weather in toronto",
+    "tool": "WeatherMockTool",
+    "params": {
+      "city": "toronto"
+    },
+    "result": {
+      "city": "Toronto",
+      "temperature": "22°C",
+      "condition": "Partly cloudy"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"weather in toronto\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: WeatherMockTool (city: toronto)"
+      },
+      {
+        "step": 3,
+        "message": "Executed WeatherMockTool → {'city': 'Toronto', 'temperature': '22°C', 'condition': 'Partly cloudy'}"
+      }
+    ],
+    "created_at": "2026-07-11T13:03:38.877473+00:00"
+  }
+]
