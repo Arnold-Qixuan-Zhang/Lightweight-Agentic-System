@@ -279,5 +279,262 @@
       }
     ],
     "created_at": "2026-07-11T13:03:38.877473+00:00"
+  },
+  {
+    "id": "2296a735-a373-4930-ace6-c85982cc09ed",
+    "instruction": "Calculate 1+1",
+    "tool": "CalculatorTool",
+    "params": {
+      "expression": "1 + 1"
+    },
+    "result": 2,
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"Calculate 1+1\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: CalculatorTool (expression: 1 + 1)"
+      },
+      {
+        "step": 3,
+        "message": "Executed CalculatorTool → 2"
+      }
+    ],
+    "created_at": "2026-07-15T14:10:51.686846+00:00"
+  },
+  {
+    "id": "928e8023-79b3-4b76-830c-48e11b98e639",
+    "instruction": "Weather in Toronto",
+    "tool": "WeatherMockTool",
+    "params": {
+      "city": "Toronto"
+    },
+    "result": {
+      "city": "Toronto",
+      "temperature": "22°C",
+      "condition": "Partly cloudy"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"Weather in Toronto\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: WeatherMockTool (city: Toronto)"
+      },
+      {
+        "step": 3,
+        "message": "Executed WeatherMockTool → {'city': 'Toronto', 'temperature': '22°C', 'condition': 'Partly cloudy'}"
+      }
+    ],
+    "created_at": "2026-07-15T14:11:15.476675+00:00"
+  },
+  {
+    "id": "1b54b82e-2b84-42e7-976b-865243282ac4",
+    "instruction": "what is the weather of 5+3?",
+    "tool": "WeatherMockTool",
+    "params": {
+      "city": "Unknown City"
+    },
+    "result": {
+      "city": "Unknown City",
+      "temperature": "20°C",
+      "condition": "Mild"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"what is the weather of 5+3?\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: WeatherMockTool (city: Unknown City)"
+      },
+      {
+        "step": 3,
+        "message": "Executed WeatherMockTool → {'city': 'Unknown City', 'temperature': '20°C', 'condition': 'Mild'}"
+      }
+    ],
+    "created_at": "2026-07-15T14:27:48.418519+00:00"
+  },
+  {
+    "id": "a5bb8df9-facf-4811-a481-46f09088d94e",
+    "instruction": "Calculate 5 times 3.",
+    "tool": "CalculatorTool",
+    "params": {
+      "expression": "5 * 3"
+    },
+    "result": 15,
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"Calculate 5 times 3.\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: CalculatorTool (expression: 5 * 3)"
+      },
+      {
+        "step": 3,
+        "message": "Executed CalculatorTool → 15"
+      },
+      {
+        "step": 4,
+        "message": "Finished → 15"
+      }
+    ],
+    "created_at": "2026-08-22T18:39:27.668521+00:00"
+  },
+  {
+    "id": "5268a4cf-1e43-49c7-a0ca-60a42c2eca46",
+    "instruction": "Tell me a joke.",
+    "tool": "none",
+    "params": {},
+    "result": "I’m sorry, but I can only help with text processing, basic math, or mock weather. For example, you could ask for “weather in Toronto” or “what’s 15 * 4.”",
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"Tell me a joke.\""
+      },
+      {
+        "step": 2,
+        "message": "No matching tool — replied without calling a tool"
+      },
+      {
+        "step": 3,
+        "message": "Finished → I’m sorry, but I can only help with text processing, basic math, or mock weather. For example, you could ask for “weather in Toronto” or “what’s 15 * 4.”"
+      }
+    ],
+    "created_at": "2026-08-22T18:39:50.511886+00:00"
+  },
+  {
+    "id": "aa75ccd1-fdd8-45fe-96bb-48b3e30eeb13",
+    "instruction": "What is the weather of 5 + 4?",
+    "tool": "none",
+    "params": {},
+    "result": "I’m sorry, but I can only help with text processing, basic math, or mock weather.  \nFor example, you could ask “weather in Toronto” or “what’s 15 * 4”.",
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"What is the weather of 5 + 4?\""
+      },
+      {
+        "step": 2,
+        "message": "No matching tool — replied without calling a tool"
+      },
+      {
+        "step": 3,
+        "message": "Finished → I’m sorry, but I can only help with text processing, basic math, or mock weather.  \nFor example, you could ask “weather in Toronto” or “what’s 15 * 4”."
+      }
+    ],
+    "created_at": "2026-08-22T18:40:15.246158+00:00"
+  },
+  {
+    "id": "7f39942b-f5dd-4ba7-a49f-479e73cc3b91",
+    "instruction": "Tell me the weather in toronto, and then calculate 6*7, and count all the words in this sentence.",
+    "tool": "multiple",
+    "params": {
+      "calls": [
+        {
+          "tool": "TextProcessorTool",
+          "params": {
+            "operation": "wordcount",
+            "text": "Tell me the weather in toronto, and then calculate 6*7, and count all the words in this sentence."
+          },
+          "result": 18
+        },
+        {
+          "tool": "WeatherMockTool",
+          "params": {
+            "city": "Toronto"
+          },
+          "result": {
+            "city": "Toronto",
+            "temperature": "22°C",
+            "condition": "Partly cloudy"
+          }
+        },
+        {
+          "tool": "CalculatorTool",
+          "params": {
+            "expression": "6*7"
+          },
+          "result": 42
+        }
+      ]
+    },
+    "result": {
+      "steps": [
+        {
+          "tool": "TextProcessorTool",
+          "params": {
+            "operation": "wordcount",
+            "text": "Tell me the weather in toronto, and then calculate 6*7, and count all the words in this sentence."
+          },
+          "result": 18
+        },
+        {
+          "tool": "WeatherMockTool",
+          "params": {
+            "city": "Toronto"
+          },
+          "result": {
+            "city": "Toronto",
+            "temperature": "22°C",
+            "condition": "Partly cloudy"
+          }
+        },
+        {
+          "tool": "CalculatorTool",
+          "params": {
+            "expression": "6*7"
+          },
+          "result": 42
+        }
+      ],
+      "summary": "42"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "message": "Received the input \"Tell me the weather in toronto, and then calculate 6*7, and count all the words in this sentence.\""
+      },
+      {
+        "step": 2,
+        "message": "Selected tool: TextProcessorTool (operation: wordcount, text: Tell me the weather in toronto, and then calculate 6*7, and count all the words in this sentence.)"
+      },
+      {
+        "step": 3,
+        "message": "Executed TextProcessorTool → 18"
+      },
+      {
+        "step": 4,
+        "message": "Selected tool: WeatherMockTool (city: Toronto)"
+      },
+      {
+        "step": 5,
+        "message": "Executed WeatherMockTool → {'city': 'Toronto', 'temperature': '22°C', 'condition': 'Partly cloudy'}"
+      },
+      {
+        "step": 6,
+        "message": "Selected tool: CalculatorTool (expression: 6*7)"
+      },
+      {
+        "step": 7,
+        "message": "Executed CalculatorTool → 42"
+      },
+      {
+        "step": 8,
+        "message": "Reached the maximum of 3 tool calls — finishing."
+      },
+      {
+        "step": 9,
+        "message": "Finished → {'steps': [{'tool': 'TextProcessorTool', 'params': {'operation': 'wordcount', 'text': 'Tell me the weather in toronto, and then calculate 6*7, and count all the words in this sentence.'}, 'result': 18}, {'tool': 'WeatherMockTool', 'params': {'city': 'Toronto'}, 'result': {'city': 'Toronto', 'temperature': '22°C', 'condition': 'Partly cloudy'}}, {'tool': 'CalculatorTool', 'params': {'expression': '6*7'}, 'result': 42}], 'summary': '42'}"
+      }
+    ],
+    "created_at": "2026-08-22T18:40:49.759681+00:00"
   }
 ]

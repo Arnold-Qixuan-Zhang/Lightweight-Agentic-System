@@ -51,4 +51,6 @@ class TextProcessorTool(BaseTool):
             return text.upper()
         if operation == "lowercase":
             return text.lower()
-        return len(text.split())
+        if operation == "wordcount":
+            return len(text.split())
+        raise ValueError("operation must be uppercase, lowercase, or wordcount")

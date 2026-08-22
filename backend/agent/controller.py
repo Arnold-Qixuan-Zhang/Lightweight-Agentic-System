@@ -1,38 +1,31 @@
-from agent.router import select_tool
+from agent.graph import run_agent
 from storage import history_store
 
 
 def handle_task(instruction: str) -> dict:
-    trace: list[dict] = []
+    state = run_agent(instruction)
+    tool_results = state.get("tool_results") or []
 
-    trace.append(
-        {"step": 1, "message": f'Received the input "{instruction}"'}
-    )
-
-    tool, params = select_tool(instruction)
-    param_summary = ", ".join(f"{k}: {v}" for k, v in params.items())
-    trace.append(
-        {
-            "step": 2,
-            "message": f"Selected tool: {tool.name} ({param_summary})",
-        }
-    )
-
-    result = tool.execute(params)
-    trace.append(
-        {"step": 3, "message": f"Executed {tool.name} → {result}"}
-    )
+    if not tool_results:
+        tool_name = "none"
+        params: dict = {}
+    elif len(tool_results) == 1:
+        tool_name = tool_results[0]["tool"]
+        params = tool_results[0]["params"]
+    else:
+        tool_name = "multiple"
+        params = {"calls": tool_results}
 
     record = history_store.save(
         instruction=instruction,
-        tool=tool.name,
+        tool=tool_name,
         params=params,
-        result=result,
-        trace=trace,
+        result=state["final_result"],
+        trace=state["trace"],
     )
 
     return {
         "task_id": record["id"],
-        "result": result,
-        "trace": trace,
+        "result": state["final_result"],
+        "trace": state["trace"],
     }

@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
 from agent.controller import handle_task
+from llm.config import GroqConfigError
 from models.schemas import HistoryRecord, TaskRequest, TaskResponse
 from storage import history_store
 
@@ -23,8 +24,8 @@ app.add_middleware(
 def create_task(request: TaskRequest):
     try:
         return handle_task(request.instruction.strip())
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except GroqConfigError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 

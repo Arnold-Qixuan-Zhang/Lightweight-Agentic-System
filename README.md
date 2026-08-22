@@ -1,16 +1,19 @@
 # Agentic AI Demo
 
-A lightweight full-stack demonstration of an agentic AI system. Users submit a text instruction through a React web UI; a Python (FastAPI) backend routes the request to the appropriate tool, executes it, stores the history, and returns a step-by-step execution trace.
+A lightweight full-stack demonstration of an agentic AI system. Users submit a text instruction through a React web UI. A Python (FastAPI) backend uses **Groq** (native tool calling) and a small **LangGraph** loop to pick and run tools, then stores history and returns a step-by-step execution trace.
 
 ## Features
 
-- **React frontend** — simple UI for entering instructions and viewing execution traces
-- **Python backend (FastAPI)** — REST API with an agent controller and rule-based tool router
+- **React frontend** — instruction box, execution trace, task history
+- **Python backend (FastAPI)** — REST API with a LangGraph agent
+- **Groq LLM** — `openai/gpt-oss-20b` with native tool calling (not keyword matching)
+- **Multi-step tools** — up to 3 tool calls per request (one tool per step)
 - **Three tools:**
   - `TextProcessorTool` — uppercase, lowercase, or word count
   - `CalculatorTool` — basic arithmetic (`+`, `-`, `*`, `/`)
-  - `WeatherMockTool` — mock weather data for a city (no external API)
-- **JSON history storage** — all tasks persisted to `backend/data/history.json` with export support
+  - `WeatherMockTool` — mock weather for a city (no external weather API)
+- **Out-of-scope replies** — friendly message (HTTP 200), not an error
+- **JSON history** — `backend/data/history.json` with export
 
 ## Project Structure
 
@@ -19,25 +22,31 @@ A lightweight full-stack demonstration of an agentic AI system. Users submit a t
 ├── backend/
 │   ├── main.py                 # FastAPI app and routes
 │   ├── requirements.txt
+│   ├── .env.example            # Copy to .env and add GROQ_API_KEY
 │   ├── agent/
-│   │   ├── controller.py       # Orchestrates the agent pipeline
-│   │   └── router.py           # Selects the appropriate tool
+│   │   ├── controller.py       # Runs the graph and saves history
+│   │   ├── graph.py            # LangGraph: reason → execute → reason
+│   │   ├── lc_tools.py         # LangChain wrappers around local tools
+│   │   └── state.py
+│   ├── llm/
+│   │   ├── config.py           # GROQ_API_KEY / GROQ_MODEL
+│   │   └── groq_client.py      # ChatGroq + bind_tools
 │   ├── tools/
 │   │   ├── text_processor.py
 │   │   ├── calculator.py
 │   │   └── weather_mock.py
 │   ├── storage/
-│   │   └── history_store.py    # JSON file persistence
+│   │   └── history_store.py
 │   ├── models/
-│   │   └── schemas.py          # Pydantic request/response models
+│   │   └── schemas.py
 │   └── data/
-│       └── history.json        # Task history (auto-created)
+│       └── history.json
 │
 ├── frontend/
 │   ├── src/
 │   │   ├── App.jsx
-│   │   ├── components/         # UI components
-│   │   └── api/client.js       # API client
+│   │   ├── components/
+│   │   └── api/client.js
 │   └── package.json
 │
 └── README.md
@@ -45,10 +54,11 @@ A lightweight full-stack demonstration of an agentic AI system. Users submit a t
 
 ## Prerequisites
 
-- **Anaconda** or **Miniconda** (includes Python and `conda`)
+- **Anaconda** or **Miniconda**
 - **Node.js 18+** and **npm**
+- A **Groq API key** ([console.groq.com](https://console.groq.com))
 
-Verify installations:
+Verify:
 
 ```bash
 conda --version
@@ -60,8 +70,6 @@ npm --version
 
 ### 1. Backend
 
-Open a terminal (Anaconda Prompt on Windows works well) and navigate to the backend directory:
-
 ```bash
 cd backend
 ```
@@ -71,17 +79,27 @@ Create and activate a Conda environment:
 ```bash
 conda create -n agentic-demo python=3.11 -y
 conda activate agentic-demo
-```
-
-Install dependencies:
-
-```bash
 pip install -r requirements.txt
 ```
 
+Configure Groq (required):
+
+```bash
+copy .env.example .env
+```
+
+On macOS/Linux use `cp .env.example .env`. Edit `.env` and set:
+
+```
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=openai/gpt-oss-20b
+```
+
+Never commit `.env`. `.env.example` has no secret.
+
 ### 2. Frontend
 
-Open a **second** terminal and navigate to the frontend directory:
+In a **second** terminal:
 
 ```bash
 cd frontend
@@ -90,9 +108,7 @@ npm install
 
 ## Running the Application
 
-You need **two terminals** — one for the backend, one for the frontend.
-
-### Terminal 1 — Start the backend
+### Terminal 1 — Backend
 
 ```bash
 cd backend
@@ -100,64 +116,50 @@ conda activate agentic-demo
 uvicorn main:app --reload --port 8000
 ```
 
-The API will be available at:
+- API: `http://localhost:8000`
+- Docs: `http://localhost:8000/docs`
+- Health: `http://localhost:8000/api/health`
 
-- API base: `http://localhost:8000`
-- Interactive docs (Swagger): `http://localhost:8000/docs`
-- Health check: `http://localhost:8000/api/health`
-
-### Terminal 2 — Start the frontend
+### Terminal 2 — Frontend
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-The UI will be available at:
+Open `http://localhost:5173`, enter an instruction, click **Run**.
 
-- `http://localhost:5173`
+## How the Agent Works
 
-Open that URL in your browser. Enter an instruction and click **Run** to see the agent trace.
-
-## Assumptions
-
-Include the following specified keywords in your input. Otherwise it won't be recognized.
-
-### TextProcessorTool
-
-- uppercase/upper case/lowercase/lower case/word count/count words
-
-### CalculatorTool
-
-- calculate/compute/add/subtract/multiply/divide
-- Or any arithmetic operators
-
-### WeatherMockTool
-
-- weather/temperature/forecast
+1. **Received** — the instruction is stored in the trace.
+2. **Reason (Groq)** — the model may emit a native **tool call** or a plain-text reply.
+3. **Execute** — the matching local tool runs (`execute()` only). Extra parallel tool calls in the same turn are deferred (one tool per step).
+4. **Reason again** — Groq sees the tool result and either calls another tool (max 3) or finishes.
+5. **Out of scope** — no tool is called; the API returns HTTP 200 with a short explanation.
+6. The run is saved to `backend/data/history.json`.
 
 ## Example Instructions
 
-Try these prompts in the UI:
-
-| Instruction | Tool Selected | Expected Result |
-|-------------|---------------|-----------------|
-| `convert hello world to uppercase` | TextProcessorTool | `HELLO WORLD` |
-| `convert Hello World to lowercase` | TextProcessorTool | `hello world` |
-| `count words in the quick brown fox` | TextProcessorTool | `4` |
-| `calculate 15 * 4` | CalculatorTool | `60` |
-| `add 10 and 25` | CalculatorTool | `35` |
-| `what is the weather in Toronto` | WeatherMockTool | Mock weather for Toronto |
-| `weather in Vancouver` | WeatherMockTool | Mock weather for Vancouver |
+| Instruction | What happens |
+|-------------|--------------|
+| `convert hello world to uppercase` | TextProcessorTool → `HELLO WORLD` |
+| `make this shouty: hello` | Same tool, natural wording |
+| `count words in the quick brown fox` | Word count |
+| `what’s 15 times 4` | CalculatorTool → `60` |
+| `is it raining in Toronto?` | WeatherMockTool (mock data) |
+| `uppercase hello then count the words` | Two tool calls, then a short summary |
+| `tell me a joke` | No tool; friendly “I can only help with…” message |
 
 ## API Endpoints
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `POST` | `/api/tasks` | Submit an instruction and run the agent |
-| `GET` | `/api/history` | List recent task history |
-| `GET` | `/api/history/export` | Download full history as `history.json` |
+| `POST` | `/api/tasks` | Run the agent (always 200 for in-scope and out-of-scope) |
+| `GET` | `/api/history` | Recent history |
+| `GET` | `/api/history/export` | Download `history.json` |
 | `GET` | `/api/health` | Health check |
+
+HTTP 500 is reserved for missing `GROQ_API_KEY` or Groq/server failures — not for jokes or unknown tasks.
 
 ### Example: Submit a task via curl
 
@@ -167,94 +169,55 @@ curl -X POST http://localhost:8000/api/tasks \
   -d "{\"instruction\": \"convert hello to uppercase\"}"
 ```
 
-Example response:
-
-```json
-{
-  "task_id": "abc-123",
-  "result": "HELLO",
-  "trace": [
-    { "step": 1, "message": "Received the input \"convert hello to uppercase\"" },
-    { "step": 2, "message": "Selected tool: TextProcessorTool (operation: uppercase, text: hello)" },
-    { "step": 3, "message": "Executed TextProcessorTool → HELLO" }
-  ]
-}
-```
-
-## How the Agent Works
-
-1. **Step 1** — The controller receives the user's instruction.
-2. **Step 2** — The router inspects the instruction with keyword/pattern matching and selects a tool.
-3. **Step 3** — The selected tool parses parameters, executes, and returns a result.
-4. The full record (instruction, tool, params, result, trace, timestamp) is saved to `backend/data/history.json`.
-
-The UI displays each step in the **Execution Trace** panel. Past runs appear in the **History** panel; click any entry to re-view its trace. Use **Export History** to download the JSON file.
-
 ## Troubleshooting
+
+**`GROQ_API_KEY is not set`**
+
+- Copy `backend/.env.example` to `backend/.env` and paste your key.
+- Restart uvicorn after changing `.env`.
 
 **`conda: command not found`**
 
-- Open **Anaconda Prompt** (Windows) or restart your terminal after installing Anaconda/Miniconda.
-- On Windows, you can also run `conda init powershell` and restart PowerShell.
+- Use **Anaconda Prompt**, or run `conda init powershell` and restart PowerShell.
 
 **Conda environment not activating**
 
 ```bash
-conda env list                  # confirm agentic-demo exists
-conda activate agentic-demo
-```
-
-If the environment does not exist yet, create it:
-
-```bash
-conda create -n agentic-demo python=3.11 -y
+conda env list
 conda activate agentic-demo
 pip install -r requirements.txt
 ```
 
-**`ModuleNotFoundError` when starting the backend**
+**`ModuleNotFoundError`**
 
-- Run `uvicorn` from inside the `backend/` directory.
-- Ensure the Conda environment is activated (`conda activate agentic-demo`).
-- Reinstall dependencies: `pip install -r requirements.txt`
+- Run uvicorn from `backend/`.
+- Activate `agentic-demo` and reinstall: `pip install -r requirements.txt`
 
-**Frontend cannot reach the backend (CORS or network error)**
+**Frontend cannot reach the backend**
 
-- Ensure the backend is running on port `8000`.
-- Ensure the frontend is running on port `5173`.
-- CORS is pre-configured for `http://localhost:5173`.
+- Backend on port `8000`, frontend on `5173`.
+- CORS is allowed for `http://localhost:5173`.
 
 **Port already in use**
 
-- Backend: `uvicorn main:app --reload --port 8001` (update `API_BASE` in `frontend/src/api/client.js` if you change the port).
+- Backend: `uvicorn main:app --reload --port 8001` (update `API_BASE` in `frontend/src/api/client.js`).
 - Frontend: `npm run dev -- --port 5174`
 
 **History file missing**
 
-- The file is auto-created at `backend/data/history.json` on the first task submission.
+- Created automatically at `backend/data/history.json` on the first task.
 
 ## Building for Production (optional)
 
 ```bash
-# Frontend static build
 cd frontend
 npm run build
 
-# Backend (production example)
-cd backend
+cd ../backend
 conda activate agentic-demo
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
-For this demo, running both dev servers locally is sufficient.
-
-## Time Spent
-
-2.5 - 3 hours
-
 ## Future Improvements
-
-- Instead of the rigid keyword/pattern matching, utilize an LLM to interpret the user instruction.
-- Implement multi-step reasoning and tool collaboration with LangChain and LangGraph.
 - Retry, error-handling, fallback components in the system to make it more robust.
 - Cache management for larger traffic.
